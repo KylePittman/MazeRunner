@@ -21,4 +21,12 @@ public class Cell {
     public int getType() {
         return type;
     }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 }

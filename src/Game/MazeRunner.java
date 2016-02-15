@@ -3,6 +3,7 @@ package Game;
 
 import Game.Model.Entities.Entity;
 import Game.Model.Entities.Player;
+import Game.Model.Map.Map;
 import Game.View.Animation;
 import Game.View.RenderHandler;
 import Game.View.SpriteSheet;
@@ -11,16 +12,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class MazeRunner extends Canvas implements Runnable{
 
-    private static final int WIDTH = 320;
-    private static final int HEIGHT = WIDTH / 12 * 9;
+    private static final double AspectRatio = (12/9);
+    private static int WIDTH = 320;
+    private static int HEIGHT = (int) (WIDTH / AspectRatio);
     private static final double SCALE = 2.5;
     private final String TITLE = "Maze Runner";
 
     private RenderHandler handler;
+    private Map map;
     private Player player;
     private Entity objective;
     private SpriteSheet sheet;
@@ -144,5 +149,30 @@ public class MazeRunner extends Canvas implements Runnable{
 
         g.dispose();
         bs.show();
+    }
+
+    public void loadMap(String file)throws IOException{
+        int height = 0, width = 0;
+
+        String pathToFile = "C:\\Java Workspace\\MazeRunner\\src\\Resources\\PresetMaps";
+        File inFile = new File(pathToFile, file);
+        Scanner inData = new Scanner(inFile);
+
+        if (inData.hasNextInt()){
+            width = inData.nextInt();
+        }
+
+        if (inData.hasNextInt()){
+            height = inData.nextInt();
+        }
+
+        Map tempMap = new Map(width, height, HEIGHT/height);
+
+        for (int y = 0; y < height && inData.hasNextLine(); y++) {
+            for (int x = 0; x < width && inData.hasNextInt(); x++) {
+                tempMap.setCellType(x,y,inData.nextInt());
+            }
+            inData.nextLine();
+        }
     }
 }
